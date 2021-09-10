@@ -4,7 +4,9 @@ characterUnicodes = {'a': '\u2801', 'b': '\u2803', 'k': '\u2805', 'l': '\u2807',
 'x': '\u282D', 'z': '\u2835', 'w': '\u283A', 'y': '\u283D', 'num': '\u283C', 'caps': '\u2820', '.': '\u2832',
 "'": '\u2804', ',': '\u2802', '-': '\u2824', '/': '\u280C', '!' : '\u2816', '?': '\u2826', '$': '\u2832', ':': '\u2812',
 ';': '\u2830', '(': '\u2836', ')': '\u2836', ' ': ' ', '1': '\u2801', '2': '\u2803', '3': '\u2809', '4': '\u2819',
-'5': '\u2811', '6': '\u280B', '7': '\u281B', '8': '\u2813', '9': '\u280A', '0': '\u281A'}
+'5': '\u2811', '6': '\u280B', '7': '\u281B', '8': '\u2813', '9': '\u280A', '0': '\u281A', 'á': '\u2837', 'é': '\u282E', 'í': '\u280C',
+'ó': '\u282C', 'ú': '\u283E', 'ü': '\u2833', 'ñ': '\u283B'}
+#TODO check dots for signs (,.;'[-]...)
 
 numberPunctuations = ['.', ',', '-', '/', '$']
 escapeCharacters = ['\n', '\r', '\t']
@@ -45,3 +47,11 @@ def convert(textToConvert):
     convertedText += characterUnicodes.get(character)
   return convertedText
 
+
+#testing abc..
+for i in characterUnicodes.keys():
+    print(f' {i}: {convertText(str(i))}')
+
+#testing numbers
+# for i in range(48,58):
+#     print(f' {chr(i)}: {convertText(chr(i))}')
