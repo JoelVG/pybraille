@@ -1,4 +1,4 @@
-characterUnicodes = {'a': '\u2801', 'b': '\u2803', 'k': '\u2805', 'l': '\u2807', 'c': '\u2809', 'i': '\u280A',
+character_unicodes = {'a': '\u2801', 'b': '\u2803', 'k': '\u2805', 'l': '\u2807', 'c': '\u2809', 'i': '\u280A',
 'f': '\u280B', 'm': '\u280D', 's': '\u280E', 'p': '\u280F', 'e': '\u2811', 'h': '\u2813', 'o': '\u2815', 'r': '\u2817',
 'd': '\u2819', 'j': '\u281A', 'g': '\u281B', 'n': '\u281D', 't': '\u281E', 'q': '\u281F', 'u': '\u2825', 'v': '\u2827',
 'x': '\u282D', 'z': '\u2835', 'w': '\u283A', 'y': '\u283D', 'num': '\u283C', 'caps': '\u2828', '.': '\u2832',
@@ -8,25 +8,25 @@ characterUnicodes = {'a': '\u2801', 'b': '\u2803', 'k': '\u2805', 'l': '\u2807',
 'ó': '\u282C', 'ú': '\u283E', 'ü': '\u2833', 'ñ': '\u283B', '+': '\u2816', '-': '\u2824', '*': '\u2826','/': '\u2832',
 '%': '\u2832', '=': '\u2836', 'pcaps': '\u2812'}
 
-numberPunctuations = ['.', ',', '-', '/', '$']
+number_punctuations = ['.', ',', '-', '/', '$']
 punctuation_marks = [',', '-', '!', '¡', '¿', '?', ':', '(', ')', ';', '.', '"', "'", ' ']
-escapeCharacters = ['\n', '\r', '\t']
+escape_characters = ['\n', '\r', '\t']
 
-def convertText(textToConvert):
-  if type(textToConvert) is not str:
+def convert_text(text_to_convert):
+  if type(text_to_convert) is not str:
     raise TypeError("Only strings can be converted")
-  return convert(textToConvert)
+  return convert(text_to_convert)
 
 
-def convertFile(fileToConvert):
+def convert_file(fileToConvert):
   if type(fileToConvert) is not str:
     raise TypeError("Please provide a valid file name")
   file = open(fileToConvert, "r")
   lines = file.readlines()
-  convertedText = ''
+  converted_text = ''
   for line in lines:
-    convertedText += convert(line)
-  return convertedText  
+    converted_text += convert(line)
+  return converted_text  
 
 
 def show_diff(str1, str2):
@@ -36,97 +36,93 @@ def show_diff(str1, str2):
   print('\n'.join(diff))
   
   
-def count_cap_words(i, textToConvert):
+def count_cap_words(i, text_to_convert):
   j = i
-  while j < len(textToConvert):
-    if textToConvert[j].isupper() or textToConvert[j] in punctuation_marks:
+  while j < len(text_to_convert):
+    if text_to_convert[j].isupper() or text_to_convert[j] in punctuation_marks:
       j += 1
       continue
     else:
       if j-i < 2:
         return -1
-      elif textToConvert[j].islower() and textToConvert[j] not in punctuation_marks:
+      elif text_to_convert[j].islower():
         break
-  return len(textToConvert[i:j].split(' '))-1
+  return len(text_to_convert[i:j].split(' '))-1
 
 
-def get_charcaps(i, textToConvert):
-  n = count_cap_words(i, textToConvert)
+def get_charcaps(i, text_to_convert):
+  n = count_cap_words(i, text_to_convert)
   #Case1
   if n == -1:
-    return characterUnicodes.get('caps')
+    return character_unicodes.get('caps')
   #CASE2
   if n < 3:
-    return characterUnicodes.get('caps')*2
+    return character_unicodes.get('caps')*2
   #CASE CASE CASE3....
   else:
-  	return characterUnicodes.get('pcaps')+characterUnicodes.get('caps')*2
+  	return character_unicodes.get('pcaps')+character_unicodes.get('caps')*2
   
   
-def convert(textToConvert):
+def convert(text_to_convert):
   n_chars = 0
   isNumber = False
   n_spaces = 0
   n_words = 0
-  convertedText = ''
+  converted_text = ''
   cap_flag = 0
-  for character in textToConvert:
+  for character in text_to_convert:
     n_chars += 1
-    if character in escapeCharacters:
-      convertedText += character
+    if character in escape_characters:
+      converted_text += character
       continue
     #handling uppercase
     if character.isupper():
-      cap_char = get_charcaps(n_chars, textToConvert[n_chars-1:])
+      cap_char = get_charcaps(n_chars, text_to_convert[n_chars-1:])
       n_words = len(cap_char)
       if cap_flag == 0:
         cap_flag = n_words
       if n_spaces == 0 and cap_flag == n_words:
-        convertedText += cap_char
-        n_spaces = count_cap_words(n_chars, textToConvert[n_chars-1:]) 
+        converted_text += cap_char
+        n_spaces = count_cap_words(n_chars, text_to_convert[n_chars-1:]) 
       elif n_spaces == 1 and cap_flag == 2:
-        convertedText += characterUnicodes.get('caps')*2
+        converted_text += character_unicodes.get('caps')*2
         n_spaces = 0
       elif n_spaces == 1 and cap_flag > 2:
-        convertedText += characterUnicodes.get('caps')
+        converted_text += character_unicodes.get('caps')
         n_spaces = 0
     character = character.lower()
     if character.isdigit():
       if not isNumber:
         isNumber = True
-        convertedText += characterUnicodes.get('num')
+        converted_text += character_unicodes.get('num')
     else:
-      if isNumber and character not in numberPunctuations:
+      if isNumber and character not in number_punctuations:
         isNumber = False
     if n_spaces != 0 and character == ' ':
         n_spaces -= 1
     elif n_spaces == 1 and cap_flag > 2:
-      convertedText += characterUnicodes.get('caps')
+      converted_text += character_unicodes.get('caps')
       n_spaces = 0
       cap_flag = 0
     elif n_spaces == 1 and cap_flag == 2:
       n_spaces = 0
       cap_flag = 0
-    # if character == ' ':
-    #   convertedText += '|'  
+    if character == ' ':
+      converted_text += '|'  
     else:
-      convertedText += characterUnicodes.get(character)
-  return convertedText
+      converted_text += character_unicodes.get(character)
+  return converted_text
 
 
-#testing abc..
-# for i in characterUnicodes.keys():
-#     print(f' {i}: {convertText(str(i))}')
-# print(f'{convertText("hola")}')
-# print(f'{convertText("Hola")}')
-# print(f'{convertText("HOLA")}')
-# print(get_charcaps(0, "Hola "))
-tm = "Para terminar esta lección sobre las reglas del uso de mayúsculas, aquí vamos a dejarte una serie de ejercicios para que puedas poner en práctica los conocimientos que hemos explicado en los pasos anteriores. En el siguiente apartado tendrás las soluciones de los ejercicios para que puedas comprobar por ti mismo/a tus resultados."
-# t1 = convertText("ESTÁ PROHIBIDO FUMAR DENTRO DE LAS DEPENDENCIAS DE LA EMPRESA".lower())
-# print(t1)
-# t2 = convertText("ESTÁ PROHIBIDO FUMAR DENTRO DE LAS DEPENDENCIAS DE LA EMPRESA")
-# print(t2)
-# show_diff(t2, t1)
-# print(tm)
-# print(convertText(tm))
-print(count_cap_words(0, "HOLA, ¿CÓMO ESTÁS? ¿CÓMO TE LLAMAS? ¿JOSÉ? -dijo el Gato-"))
+if __name__ == '__main__':
+  #   testing abc..
+  # for i in character_unicodes.keys():
+  #     print(f' {i}: {convert_text(str(i))}')
+  # print(f'{convert_text("hola")}')
+  # print(f'{convert_text("Hola")}')
+  # print(f'{convert_text("HOLA")}')
+  t1 = convert_text("ESTÁ PROHIBIDO FUMAR DENTRO DE LAS DEPENDENCIAS DE LA EMPRESA".lower())
+  print(t1)
+  t2 = convert_text("ESTÁ PROHIBIDO FUMAR DENTRO DE LAS DEPENDENCIAS DE LA EMPRESA")
+  print(t2)
+  show_diff(t2, t1)
